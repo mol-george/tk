@@ -155,3 +155,34 @@ func workTicket(ticketPath string) {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
 }
+
+func existsTicketDB(db *gorm.DB, newTicketNumer string) bool {
+	ticket := Ticket{}
+	db.Where(&Ticket{Number: newTicketNumer}).Find(&ticket)
+	if ticket.Number != "" {
+		return true
+	}
+	return false
+
+}
+
+func existsTicketPath(newTicketPath string) bool {
+	if _, err := os.Stat(newTicketPath); !os.IsNotExist(err) {
+		return true
+	}
+	return false
+
+}
+
+func existsTicket(existsTicketDB, existsTicketPath bool) bool {
+	if existsTicketDB {
+		fmt.Printf("Ticket Exists: Database\n")
+	}
+	if existsTicketPath {
+		fmt.Printf("Ticket Exists: File System \n")
+	}
+	if existsTicketDB || existsTicketPath {
+		return true
+	}
+	return false
+}

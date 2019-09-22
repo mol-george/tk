@@ -29,8 +29,7 @@ var newCmd = &cobra.Command{
 		dbPath := getDBPath(ticketsPath, dbName)                       // ~/tickets/.tickets.db
 
 		// Set Paths
-		setTicketsPath(ticketsPath)     // ~/tickets/
-		setNewTicketPath(newTicketPath) // ~/tickets/myNewTicket
+		setTicketsPath(ticketsPath) // ~/tickets/
 
 		// Create DB connection and migrates schema
 		db, err := gorm.Open("sqlite3", dbPath)
@@ -40,13 +39,17 @@ var newCmd = &cobra.Command{
 		defer db.Close()
 		db.AutoMigrate(&Ticket{})
 
-		// create newTicket
-		newTicketDB(db, newTicketNumer, "")
-		newTicketTemplate(templateNames, newTicketPath, newTicketNumer)
+		// check if ticket exist
+		if !existsTicket(existsTicketDB(db, newTicketNumer), existsTicketPath(newTicketPath)) {
+			// create newTicket
+			newTicketDB(db, newTicketNumer, "")                             // DB entry
+			setNewTicketPath(newTicketPath)                                 // ~/tickets/myNewTicket
+			newTicketTemplate(templateNames, newTicketPath, newTicketNumer) // ~/tickets/myNewTicket/00 ...
 
-		// open newTicket in sublime
-		// no windows implementation yet
-		workTicket(newTicketPath)
+			// open newTicket in sublime
+			// no windows implementation yet
+			workTicket(newTicketPath)
+		}
 
 	},
 }

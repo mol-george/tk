@@ -43,7 +43,6 @@ tk w _TICKET
 ## next
 * needs refactoring:
     - input validation
-    - checks to see if tickets (file, and db entries exist for given ticket number)
 * aditional fields to the Ticket struct:
     - rAccount
     - aAccount
