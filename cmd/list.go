@@ -35,13 +35,18 @@ var listCmd = &cobra.Command{
 		}
 		defer db.Close()
 
-		switch status {
-		case "workingOn", "waitingFor", "closed":
-			listAllTicketsOfStatus(db, status)
+		switch {
+		case db.HasTable("tickets"):
+			switch status {
+			case "workingOn", "waitingFor", "closed":
+				listAllTicketsOfStatus(db, status)
+			default:
+				listAllTicketsOfStatus(db, "workingOn")
+				fmt.Println()
+				listAllTicketsOfStatus(db, "waitingFor")
+			}
 		default:
-			listAllTicketsOfStatus(db, "workingOn")
-			fmt.Println()
-			listAllTicketsOfStatus(db, "waitingFor")
+			fmt.Printf("Table tickets does not exist. Need to add tickets first\n")
 		}
 	},
 }

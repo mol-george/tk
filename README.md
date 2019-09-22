@@ -42,6 +42,7 @@ tk w _TICKET
 
 ## next
 * needs refactoring:
+    - if db does not exists list returns error
     - input validation
 * aditional fields to the Ticket struct:
     - rAccount
