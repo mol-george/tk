@@ -9,7 +9,7 @@ import (
 
 // removeCmd represents the remove command
 var removeCmd = &cobra.Command{
-	Use:   "remove",
+	Use:   "remove <ticket/all>",
 	Short: "remove specific / all tickets db entries",
 	Long:  `remove specific / all tickets db entries; it does not remove the ticket notes`,
 	Args: func(cmd *cobra.Command, args []string) error {

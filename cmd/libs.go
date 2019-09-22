@@ -148,8 +148,8 @@ func removeTicket(db *gorm.DB, toBeRemoved string) {
 	db.Where("number = ?", toBeRemoved).Delete(Ticket{})
 }
 
-func openTicket(newTicketPath string) {
-	cmd := exec.Command("subl", "-an", newTicketPath)
+func workTicket(ticketPath string) {
+	cmd := exec.Command("subl", "-an", ticketPath)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)

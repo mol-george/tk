@@ -9,7 +9,7 @@ import (
 
 // newCmd represents the new command
 var newCmd = &cobra.Command{
-	Use:   "new <ticketNumber>",
+	Use:   "new <ticket>",
 	Short: "creates new ticket",
 	Long:  `creates new ticket db entry, generates its templates and open them in a editor`,
 	Args: func(cmd *cobra.Command, args []string) error {
@@ -46,7 +46,7 @@ var newCmd = &cobra.Command{
 
 		// open newTicket in sublime
 		// no windows implementation yet
-		openTicket(newTicketPath)
+		workTicket(newTicketPath)
 
 	},
 }
