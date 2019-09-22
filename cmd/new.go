@@ -19,19 +19,20 @@ var newCmd = &cobra.Command{
 		// further validation of the parameter can be implemented
 		return nil // functions returns nil only if argument passes all checks
 	},
+	Aliases: []string{"n"},
 	Run: func(cmd *cobra.Command, args []string) {
 		newTicketNumer := args[0]
 
-		// Gets Paths
+		// Get Paths
 		ticketsPath := getTicketsPath()                                // ~/tickets/
 		newTicketPath := getNewTicketPath(ticketsPath, newTicketNumer) // ~/tickets/myNewTicket
-		dbPath := getDBPath(ticketsPath, dbName)
+		dbPath := getDBPath(ticketsPath, dbName)                       // ~/tickets/.tickets.db
 
-		// Sets Paths
+		// Set Paths
 		setTicketsPath(ticketsPath)     // ~/tickets/
 		setNewTicketPath(newTicketPath) // ~/tickets/myNewTicket
 
-		// Creates DB connection and migrates schema
+		// Create DB connection and migrates schema
 		db, err := gorm.Open("sqlite3", dbPath)
 		if err != nil {
 			panic("failed to connect database")
@@ -43,7 +44,7 @@ var newCmd = &cobra.Command{
 		newTicketDB(db, newTicketNumer, "")
 		newTicketTemplate(templateNames, newTicketPath, newTicketNumer)
 
-		// open ticket in sublime
+		// open newTicket in sublime
 		// no windows implementation yet
 		openTicket(newTicketPath)
 

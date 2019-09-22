@@ -23,7 +23,7 @@ var (
 const (
 	dbName     = ".tickets.db"
 	ticketsDir = "tickets"
-	start      = "=====================================================\n"
+	start      = "=====================================================\n\n"
 	middle     = "-----------------------------------------------------\n\n"
 	end        = "+++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
 )
@@ -83,7 +83,7 @@ func newTicketDB(db *gorm.DB, newTicketNumer string, status string) {
 }
 
 func newTicketTemplate(templateNames []string, newTicketPath, newTicketNumer string) {
-	body := start + "{{ .Number}}\n" + strings.Repeat(middle, 20) + end
+	body := "{{ .Number}}\n\n\n" + start + strings.Repeat(middle, 20) + end
 	t, err := template.New("ticketTemplate").Parse(body)
 	if err != nil {
 		panic(err)
@@ -104,7 +104,6 @@ func newTicketTemplate(templateNames []string, newTicketPath, newTicketNumer str
 }
 
 func listAllTickets(db *gorm.DB) {
-	fmt.Printf("ALL Tickets\n")
 	var ticket Ticket
 
 	rows, err := db.Model(&Ticket{}).Rows()
@@ -117,29 +116,36 @@ func listAllTickets(db *gorm.DB) {
 		db.ScanRows(rows, &ticket)
 		fmt.Printf("%s\t\t%s\n", ticket.Number, ticket.Status)
 	}
-	fmt.Printf("-------------------------\n\n")
 }
 
 func listAllTicketsOfStatus(db *gorm.DB, status string) {
-	fmt.Printf("All %s Tickets:\n", status)
+	fmt.Printf("====== %s ======\n", status)
 	tickets := []Ticket{}
 
 	db.Where(&Ticket{Status: status}).Find(&tickets)
 	for _, ticket := range tickets {
 		fmt.Println(ticket.Number)
 	}
-	fmt.Printf("-------------------------\n\n")
-
 }
 
-func closeTicket(db *gorm.DB, newTicketNumer string) {
+func getTicketStatus(db *gorm.DB, ticketNumber string) string {
+	ticket := Ticket{}
+	db.Where(&Ticket{Number: ticketNumber}).Find(&ticket)
+	return ticket.Status
+}
+
+func changeStatus(db *gorm.DB, ticketNumer, newStatus string) {
 	var ticket Ticket
-	db.Model(&ticket).Where("number = ?", newTicketNumer).Update("status", "closed")
+	db.Model(&ticket).Where("number = ?", ticketNumer).Update("status", newStatus)
 }
 
-func deleteAllTickets(db *gorm.DB) {
+func removeAllTickets(db *gorm.DB) {
 	var ticket Ticket
 	db.Delete(&ticket)
+}
+
+func removeTicket(db *gorm.DB, toBeRemoved string) {
+	db.Where("number = ?", toBeRemoved).Delete(Ticket{})
 }
 
 func openTicket(newTicketPath string) {
@@ -149,16 +155,3 @@ func openTicket(newTicketPath string) {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
 }
-
-/*
-func to launch editor
-newTicketTemplate("123")
-newTicket(db, "345", "")
-newTicket(db, "789", "waitingFor")
-listAllTickets(db)
-closeTicket(db, "345")
-listAllTicketsOfStatus(db, "workingOn")
-listAllTicketsOfStatus(db, "waitingFor")
-listAllTicketsOfStatus(db, "closed")
-deleteAllTickets(db)
-*/
