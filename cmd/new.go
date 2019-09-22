@@ -22,8 +22,14 @@ var newCmd = &cobra.Command{
 	},
 	Aliases: []string{"n"},
 	Run: func(cmd *cobra.Command, args []string) {
-		newTicketNumer := args[0]
-		note := args[1]
+		var newTicketNumer, note string
+		switch len(args) {
+		case 2:
+			*(&newTicketNumer) = args[0]
+			*(&note) = args[1]
+		case 1:
+			*(&newTicketNumer) = args[0]
+		}
 
 		// Get Paths
 		ticketsPath := getTicketsPath()                                // ~/tickets/

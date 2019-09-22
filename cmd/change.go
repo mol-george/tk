@@ -29,6 +29,7 @@ var changeCmd = &cobra.Command{
 	},
 	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
+		newNote, _ := cmd.Flags().GetString("note")
 
 		var ticketNumber, newStatus string
 		switch {
@@ -53,6 +54,10 @@ var changeCmd = &cobra.Command{
 		status := getTicketStatus(db, ticketNumber)
 		// fmt.Printf("ticketNumber: %s\noldStatus: %s\nnewStatus: %s\n", ticketNumber, status, newStatus)
 
+		if newNote != "" {
+			changeNote(db, ticketNumber, newNote)
+		}
+
 		if (status == "workingOn" || status == "waitingFor") && (newStatus == "" || newStatus == "closed") {
 			changeStatus(db, ticketNumber, "closed")
 		} else if status == "closed" && (newStatus == "" || newStatus == "workingOn") {
@@ -69,4 +74,5 @@ var changeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(changeCmd)
+	changeCmd.Flags().StringP("note", "n", "", "info note")
 }

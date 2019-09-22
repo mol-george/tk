@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/gookit/color"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -120,13 +121,13 @@ func listAllTickets(db *gorm.DB) {
 }
 
 func listAllTicketsOfStatus(db *gorm.DB, status string) {
-	fmt.Printf("====== %s ======\n", status)
-	fmt.Printf("number\t\t\tnote\n")
+	color.Style{color.FgCyan, color.OpBold}.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	color.Green.Printf("NUMBER\t\t\tNOTE\n")
 	tickets := []Ticket{}
 
 	db.Where(&Ticket{Status: status}).Find(&tickets)
 	for _, ticket := range tickets {
-		fmt.Printf("%s\t\t\t%s\n", ticket.Number, ticket.Note)
+		fmt.Printf("%s\t%s\n", ticket.Number, ticket.Note)
 	}
 }
 
@@ -139,6 +140,11 @@ func getTicketStatus(db *gorm.DB, ticketNumber string) string {
 func changeStatus(db *gorm.DB, ticketNumer, newStatus string) {
 	var ticket Ticket
 	db.Model(&ticket).Where("number = ?", ticketNumer).Update("status", newStatus)
+}
+
+func changeNote(db *gorm.DB, ticketNumer, newNote string) {
+	var ticket Ticket
+	db.Model(&ticket).Where("number = ?", ticketNumer).Update("note", newNote)
 }
 
 func removeAllTickets(db *gorm.DB) {
