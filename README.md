@@ -15,29 +15,27 @@
 ```sh
 ## CREATE NEW TICKET
 tk new _TICKET
-tk n _TICKET
-
+tk n   _TICKET
 
 ## LIST ACTIVE
 tk list
 tk l
 
-
 ## LIST TICKESTS WITH SPECIFIC STATUS
 tk list _STATUS
-tk l _STATUS
+tk l    _STATUS
 
 ## LIST ALL TICKESTS
 tk list all
-tk l all
+tk l    all
 
 ## CHANGE STATUS (active --> closed OR closed --> active (workingON))
-tk change _TICKET [-n "notes"]
-tk c      _TICKET [-n "notes"]
+tk change _TICKET [-n "_NOTES"]
+tk c      _TICKET [-n "_NOTES"]
 
 ## CHANGE STATUS (existing status --> specified status)
-tk c _TICKET _STATUS [-n "notes"]
-tk c _TICKET _STATUS [-n "notes"]
+tk c _TICKET _STATUS [-n "_NOTES"]
+tk c _TICKET _STATUS [-n "_NOTES"]
 
 ## REMOVE DB ENTRIES NOT THE TICKET NOTES
 tk r _TICKET
