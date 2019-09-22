@@ -14,23 +14,30 @@
 ## usage examples
 ```sh
 ## CREATE NEW TICKET
+tk new _TICKET
 tk n _TICKET
 
-## LIST ALL ACTIVE
+
+## LIST ACTIVE
+tk list
 tk l
 
-## LIST SPECIFIC STATUS
-tk l -s _STATUS
 
-## CHANGE STATUS
-#### active --> closed
-#### closed --> workingON
-tk c _TICKET
+## LIST TICKESTS WITH SPECIFIC STATUS
+tk list _STATUS
+tk l _STATUS
 
-## CHANGE STATUS
-#### active --> closed
-#### closed --> workingON
-tk c -s _STATUS
+## LIST ALL TICKESTS
+tk list all
+tk l all
+
+## CHANGE STATUS (active --> closed OR closed --> active (workingON))
+tk change _TICKET [-n "notes"]
+tk c      _TICKET [-n "notes"]
+
+## CHANGE STATUS (existing status --> specified status)
+tk c _TICKET _STATUS [-n "notes"]
+tk c _TICKET _STATUS [-n "notes"]
 
 ## REMOVE DB ENTRIES NOT THE TICKET NOTES
 tk r _TICKET
