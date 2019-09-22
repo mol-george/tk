@@ -13,16 +13,24 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
+	Use:   "list [status]",
 	Short: "list tickets",
 	Long: `list tickets:
-	* by default (without providing any flags) lists all active tickets:
+	* by default lists all active tickets:
 		- tickets you are working on (workingON)
 		- or tickets on which you wait for others to work on before you can resume your work (waitingFor)
-	* you can also list only workignOn, waitingFor or closed passing the appropriate status flag value`,
-	Aliases: []string{"l"},
+	* you can also list only workignOn, waitingFor or closed passing the appropriate status parameter`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		// further validation of the parameter can be implemented
+		return nil // functions returns nil only if argument passes all checks
+	},
+	Aliases: []string{"l", "ls"},
 	Run: func(cmd *cobra.Command, args []string) {
-		status, _ := cmd.Flags().GetString("status")
+		var status string
+		switch {
+		case len(args) > 0:
+			*(&status) = args[0]
+		}
 
 		// Get Paths
 		ticketsPath := getTicketsPath()          // ~/tickets/
@@ -38,6 +46,12 @@ var listCmd = &cobra.Command{
 		switch {
 		case db.HasTable("tickets"):
 			switch status {
+			case "all":
+				listAllTicketsOfStatus(db, "workingOn")
+				fmt.Println()
+				listAllTicketsOfStatus(db, "waitingFor")
+				fmt.Println()
+				listAllTicketsOfStatus(db, "closed")
 			case "workingOn", "waitingFor", "closed":
 				listAllTicketsOfStatus(db, status)
 			default:
@@ -53,5 +67,4 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	listCmd.Flags().StringP("status", "s", "", "possible values: workginOn, waitingFor, closed")
 }

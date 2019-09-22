@@ -11,7 +11,7 @@ import (
 var removeCmd = &cobra.Command{
 	Use:   "remove <ticket/all>",
 	Short: "remove specific / all tickets db entries",
-	Long:  `remove specific / all tickets db entries; it does not remove the ticket notes`,
+	Long:  `remove specific / all tickets db entries; it does not remove the ticket files`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("change command requires an argument - either: a ticket number or all")

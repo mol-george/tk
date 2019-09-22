@@ -33,6 +33,7 @@ type Ticket struct {
 	gorm.Model
 	Number string
 	Status string
+	Note   string
 }
 
 func getTicketsPath() string {
@@ -75,11 +76,11 @@ func getDBPath(ticketsPath, dbName string) string {
 	return path.Join(ticketsPath, dbName)
 }
 
-func newTicketDB(db *gorm.DB, newTicketNumer string, status string) {
+func newTicketDB(db *gorm.DB, newTicketNumer, status, note string) {
 	if status == "" {
 		status = "workingOn"
 	}
-	db.Create(&Ticket{Number: newTicketNumer, Status: status})
+	db.Create(&Ticket{Number: newTicketNumer, Status: status, Note: note})
 }
 
 func newTicketTemplate(templateNames []string, newTicketPath, newTicketNumer string) {
@@ -120,11 +121,12 @@ func listAllTickets(db *gorm.DB) {
 
 func listAllTicketsOfStatus(db *gorm.DB, status string) {
 	fmt.Printf("====== %s ======\n", status)
+	fmt.Printf("number\t\t\tnote\n")
 	tickets := []Ticket{}
 
 	db.Where(&Ticket{Status: status}).Find(&tickets)
 	for _, ticket := range tickets {
-		fmt.Println(ticket.Number)
+		fmt.Printf("%s\t\t\t%s\n", ticket.Number, ticket.Note)
 	}
 }
 

@@ -21,16 +21,23 @@ var changeCmd = &cobra.Command{
 		- workingOn if closed
 		- waitingFor if specified`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			return errors.New("change command requires a ticket argument")
+		if len(args) < 1 || len(args) > 2 {
+			return errors.New("change command requires at least one argument (ticket) but no more then two arguments (ticket, status)")
 		}
 		// further validation of the parameter can be implemented
 		return nil // functions returns nil only if argument passes all checks
 	},
 	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
-		ticketNumber := args[0]
-		newStatus, _ := cmd.Flags().GetString("newStatus")
+
+		var ticketNumber, newStatus string
+		switch {
+		case len(args) == 2:
+			*(&ticketNumber) = args[0]
+			*(&newStatus) = args[1]
+		case len(args) == 1:
+			*(&ticketNumber) = args[0]
+		}
 
 		// Get Paths
 		ticketsPath := getTicketsPath()          // ~/tickets/
@@ -55,13 +62,11 @@ var changeCmd = &cobra.Command{
 		} else if (status == "workingOn" || status == "waitingFor") && (newStatus == "workingOn" || newStatus == "waitingFor") {
 			changeStatus(db, ticketNumber, newStatus)
 		} else {
-			fmt.Println("no else/if was matche")
+			fmt.Println("no status matched")
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(changeCmd)
-	changeCmd.Flags().StringP("newStatus", "n", "", "change ticket status to new status")
-
 }
