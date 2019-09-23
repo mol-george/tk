@@ -30,12 +30,14 @@ tk list all
 tk l    all
 
 ## CHANGE STATUS (active --> closed OR closed --> active (workingON))
-tk change _TICKET 
-tk c      _TICKET
+## AND/OR NOTES
+tk change _TICKET [-n "_NOTES"]
+tk c      _TICKET [-n "_NOTES"]
 
 ## CHANGE STATUS (existing status --> specified status)
-tk c _TICKET _STATUS
-tk c _TICKET _STATUS
+## AND/OR NOTES
+tk c _TICKET _STATUS [-n "_NOTES"]
+tk c _TICKET _STATUS [-n "_NOTES"]
 
 ## CHANGE NOTES
 tk change _TICKET -n "_NOTES"
