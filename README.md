@@ -75,3 +75,6 @@ tk w _TICKET
         + it switches from closed to working on
         + and between any active status to closed
 * if I only want to change the note I have to specify the status in order to not change the status unintentionally
+* have to implement search:
+    - to list a ticket if I can't locate it
+    - to display tickets between dates
