@@ -105,6 +105,7 @@ func newTicketTemplate(templateNames []string, newTicketPath, newTicketNumer str
 	}
 }
 
+// unused function
 func listAllTickets(db *gorm.DB) {
 	var ticket Ticket
 
@@ -121,13 +122,23 @@ func listAllTickets(db *gorm.DB) {
 }
 
 func listAllTicketsOfStatus(db *gorm.DB, status string) {
-	color.Style{color.FgCyan, color.OpBold}.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
-	color.Green.Printf("NUMBER\t\t\tNOTE\n")
-	tickets := []Ticket{}
+	// color.Style{color.FgCyan, color.OpBold}.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	switch status {
+	case "workingOn":
+		color.Red.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	case "sometimesSoon":
+		color.Danger.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	case "waitingFor":
+		color.Yellow.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	case "closed":
+		color.Secondary.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
+	}
 
+	tickets := []Ticket{}
 	db.Where(&Ticket{Status: status}).Find(&tickets)
 	for _, ticket := range tickets {
-		fmt.Printf("%s\t%s\n", ticket.Number, ticket.Note)
+		color.Notice.Printf("%s\t", ticket.Number)
+		fmt.Printf("%s\n", ticket.Note)
 	}
 }
 

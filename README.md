@@ -53,9 +53,25 @@ tk w _TICKET
 
 ## next
 * needs refactoring:
+    - update script to take in account aditional sometimesSoon status
     - if db does not exists list returns error
     - input validation
 * aditional fields to the Ticket struct:
     - rAccount
     - aAccount
     - db notes to the tiket to describe the ticket main objective
+
+### change
+* I must switch to using positional arguments for notes and I must validate positional arguments:
+    - if 1 argument:
+        + the 1st and only argument must be an existing ticket
+    - if 2 arguments:
+        + 1st must be an existing ticket
+        + 2nd must comment
+* I must lowercase all states
+* the basic idea with change is if:
+    - if new status is specified it changes to the specified status
+    - if new status is not specified:
+        + it switches from closed to working on
+        + and between any active status to closed
+* if I only want to change the note I have to specify the status in order to not change the status unintentionally

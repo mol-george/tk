@@ -49,13 +49,17 @@ var listCmd = &cobra.Command{
 			case "all":
 				listAllTicketsOfStatus(db, "workingOn")
 				fmt.Println()
+				listAllTicketsOfStatus(db, "sometimesSoon")
+				fmt.Println()
 				listAllTicketsOfStatus(db, "waitingFor")
 				fmt.Println()
 				listAllTicketsOfStatus(db, "closed")
-			case "workingOn", "waitingFor", "closed":
+			case "workingOn", "sometimesSoon", "waitingFor", "closed":
 				listAllTicketsOfStatus(db, status)
 			default:
 				listAllTicketsOfStatus(db, "workingOn")
+				fmt.Println()
+				listAllTicketsOfStatus(db, "sometimesSoon")
 				fmt.Println()
 				listAllTicketsOfStatus(db, "waitingFor")
 			}

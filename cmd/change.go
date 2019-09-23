@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
@@ -54,33 +53,17 @@ var changeCmd = &cobra.Command{
 		status := getTicketStatus(db, ticketNumber)
 		// fmt.Printf("ticketNumber: %s\noldStatus: %s\nnewStatus: %s\n", ticketNumber, status, newStatus)
 
-		if (status == "workingOn" || status == "waitingFor" || status == "sometimesSoon") && (newStatus == "" || newStatus == "closed") {
-			changeStatus(db, ticketNumber, "closed")
-			if newNote != "" {
-				changeNote(db, ticketNumber, newNote)
-			}
-		} else if status == "closed" && (newStatus == "" || newStatus == "workingOn") {
-			changeStatus(db, ticketNumber, "workingOn")
-			if newNote != "" {
-				changeNote(db, ticketNumber, newNote)
-			}
-		} else if status == "closed" && newStatus == "waitingFor" {
-			changeStatus(db, ticketNumber, "waitingFor")
-			if newNote != "" {
-				changeNote(db, ticketNumber, newNote)
-			}
-		} else if status == "closed" && newStatus == "sometimesSoon" {
-			changeStatus(db, ticketNumber, "sometimesSoon")
-			if newNote != "" {
-				changeNote(db, ticketNumber, newNote)
-			}
-		} else if (status == "workingOn" || status == "waitingFor" || status == "sometimesSoon") && (newStatus == "workingOn" || newStatus == "waitingFor" || status == "sometimesSoon") {
+		switch {
+		case newStatus != "": //    if newStatus IS specified                  --> change to it
 			changeStatus(db, ticketNumber, newStatus)
-			if newNote != "" {
-				changeNote(db, ticketNumber, newNote)
-			}
-		} else {
-			fmt.Println("no status matched")
+		case status == "closed": // if newStatus empty && status closed        --> workingON
+			changeStatus(db, ticketNumber, "workingOn")
+		default: //                 if newStatus empty && status is NOT closed --> closed
+			changeStatus(db, ticketNumber, "closed")
+		}
+
+		if newNote != "" {
+			changeNote(db, ticketNumber, newNote)
 		}
 	},
 }
