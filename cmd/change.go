@@ -54,18 +54,26 @@ var changeCmd = &cobra.Command{
 		status := getTicketStatus(db, ticketNumber)
 		// fmt.Printf("ticketNumber: %s\noldStatus: %s\nnewStatus: %s\n", ticketNumber, status, newStatus)
 
-		if newNote != "" {
-			changeNote(db, ticketNumber, newNote)
-		}
-
-		if (status == "workingOn" || status == "waitingFor") && (newStatus == "" || newStatus == "closed") && (newNote == "") {
+		if (status == "workingOn" || status == "waitingFor") && (newStatus == "" || newStatus == "closed") {
 			changeStatus(db, ticketNumber, "closed")
+			if newNote != "" {
+				changeNote(db, ticketNumber, newNote)
+			}
 		} else if status == "closed" && (newStatus == "" || newStatus == "workingOn") {
 			changeStatus(db, ticketNumber, "workingOn")
+			if newNote != "" {
+				changeNote(db, ticketNumber, newNote)
+			}
 		} else if status == "closed" && newStatus == "waitingFor" {
 			changeStatus(db, ticketNumber, "waitingFor")
+			if newNote != "" {
+				changeNote(db, ticketNumber, newNote)
+			}
 		} else if (status == "workingOn" || status == "waitingFor") && (newStatus == "workingOn" || newStatus == "waitingFor") {
 			changeStatus(db, ticketNumber, newStatus)
+			if newNote != "" {
+				changeNote(db, ticketNumber, newNote)
+			}
 		} else {
 			fmt.Println("no status matched")
 		}
