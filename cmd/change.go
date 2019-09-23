@@ -58,7 +58,7 @@ var changeCmd = &cobra.Command{
 			changeNote(db, ticketNumber, newNote)
 		}
 
-		if (status == "workingOn" || status == "waitingFor") && (newStatus == "" || newStatus == "closed") && (newNote != "") {
+		if (status == "workingOn" || status == "waitingFor") && (newStatus == "" || newStatus == "closed") && (newNote == "") {
 			changeStatus(db, ticketNumber, "closed")
 		} else if status == "closed" && (newStatus == "" || newStatus == "workingOn") {
 			changeStatus(db, ticketNumber, "workingOn")
