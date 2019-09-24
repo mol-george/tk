@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -204,4 +205,27 @@ func existsTicket(existsTicketDB, existsTicketPath bool) bool {
 		return true
 	}
 	return false
+}
+
+func normalizeInput(rawInput string) string {
+	reg, err := regexp.Compile("[^a-zA-Z]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+	rawInput = reg.ReplaceAllString(*(&rawInput), "")
+	rawInput = strings.ToLower(rawInput)
+
+	var input string
+
+	switch rawInput {
+	case "workingon", "wo":
+		*(&input) = "workingon"
+	case "sometimessoon", "ss":
+		*(&input) = "sometimessoon"
+	case "waitingfor", "wf":
+		*(&input) = "waitingfor"
+	case "closed", "cl":
+		*(&input) = "closed"
+	}
+	return input
 }
