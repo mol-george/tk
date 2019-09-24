@@ -30,7 +30,8 @@ const (
 	end        = "+++++++++++++++++++++++++++++++++++++++++++++++++++++\n"
 )
 
-// Ticket ...
+// Ticket models ticket basic properties
+// Further fields can be added: RAccount, AAccount
 type Ticket struct {
 	gorm.Model
 	Number string
@@ -80,7 +81,7 @@ func getDBPath(ticketsPath, dbName string) string {
 
 func newTicketDB(db *gorm.DB, newTicketNumer, status, note string) {
 	if status == "" {
-		status = "workingOn"
+		status = "workingon"
 	}
 	db.Create(&Ticket{Number: newTicketNumer, Status: status, Note: note})
 }
@@ -123,13 +124,12 @@ func listAllTickets(db *gorm.DB) {
 }
 
 func listAllTicketsOfStatus(db *gorm.DB, status string) {
-	// color.Style{color.FgCyan, color.OpBold}.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
 	switch status {
-	case "workingOn":
+	case "workingon":
 		color.Red.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
-	case "sometimesSoon":
+	case "sometimessoon":
 		color.Danger.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
-	case "waitingFor":
+	case "waitingfor":
 		color.Yellow.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
 	case "closed":
 		color.Secondary.Printf("=======\t %s \t=======\n", strings.ToUpper(status))
@@ -226,6 +226,8 @@ func normalizeInput(rawInput string) string {
 		*(&input) = "waitingfor"
 	case "closed", "cl":
 		*(&input) = "closed"
+	case "all":
+		*(&input) = "all"
 	}
 	return input
 }

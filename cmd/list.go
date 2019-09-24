@@ -18,8 +18,8 @@ var listCmd = &cobra.Command{
 	Long: `list tickets:
 	* by default lists all active tickets:
 		- tickets you are working on (workingON)
-		- or tickets on which you wait for others to work on before you can resume your work (waitingFor)
-	* you can also list only workignOn, waitingFor or closed passing the appropriate status parameter`,
+		- or tickets on which you wait for others to work on before you can resume your work (waitingfor)
+	* you can also list only workignOn, waitingfor or closed passing the appropriate status parameter`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		// further validation of the parameter can be implemented
 		return nil // functions returns nil only if argument passes all checks
@@ -27,9 +27,8 @@ var listCmd = &cobra.Command{
 	Aliases: []string{"l", "ls"},
 	Run: func(cmd *cobra.Command, args []string) {
 		var status string
-		switch {
-		case len(args) > 0:
-			*(&status) = args[0]
+		if len(args) > 0 {
+			*(&status) = normalizeInput(args[0])
 		}
 
 		// Get Paths
@@ -47,21 +46,23 @@ var listCmd = &cobra.Command{
 		case db.HasTable("tickets"):
 			switch status {
 			case "all":
-				listAllTicketsOfStatus(db, "workingOn")
+				fmt.Println("matched all")
+				// listAllTicketsOfStatus can be improved by using https://gobyexample.com/variadic-functions
+				listAllTicketsOfStatus(db, "workingon")
 				fmt.Println()
-				listAllTicketsOfStatus(db, "sometimesSoon")
+				listAllTicketsOfStatus(db, "sometimessoon")
 				fmt.Println()
-				listAllTicketsOfStatus(db, "waitingFor")
+				listAllTicketsOfStatus(db, "waitingfor")
 				fmt.Println()
 				listAllTicketsOfStatus(db, "closed")
-			case "workingOn", "sometimesSoon", "waitingFor", "closed":
+			case "workingon", "sometimessoon", "waitingfor", "closed":
 				listAllTicketsOfStatus(db, status)
 			default:
-				listAllTicketsOfStatus(db, "workingOn")
+				listAllTicketsOfStatus(db, "workingon")
 				fmt.Println()
-				listAllTicketsOfStatus(db, "sometimesSoon")
+				listAllTicketsOfStatus(db, "sometimessoon")
 				fmt.Println()
-				listAllTicketsOfStatus(db, "waitingFor")
+				listAllTicketsOfStatus(db, "waitingfor")
 			}
 		default:
 			fmt.Printf("Table tickets does not exist. Need to add tickets first\n")

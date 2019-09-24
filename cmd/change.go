@@ -20,24 +20,38 @@ var changeCmd = &cobra.Command{
 		- workingOn if closed
 		- waitingFor if specified`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 || len(args) > 2 {
-			return errors.New("change command requires at least one argument (ticket) but no more then two arguments (ticket, status)")
+		if len(args) < 1 || len(args) > 3 {
+			return errors.New("change command requires at least 1 arg (ticket) but no more then 3 args (ticket, status, notes)")
 		}
 		// further validation of the parameter can be implemented
 		return nil // functions returns nil only if argument passes all checks
 	},
 	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
-		newNote, _ := cmd.Flags().GetString("note")
+		// newNote, _ := cmd.Flags().GetString("note")
 
-		var ticketNumber, newStatus string
+		// making some assumption here for which I will have to implement checks latter
+		// that if it is only argument it is the ticket and if there are 3 there are the ticket, status and the comment
+		// if there are two the first is the ticket
+		var ticketNumber, newStatus, newNote string
 		switch {
-		case len(args) == 2:
+		case len(args) == 3:
 			*(&ticketNumber) = args[0]
 			*(&newStatus) = args[1]
-		case len(args) == 1:
+			*(&newNote) = args[2]
+		case len(args) == 2:
+			*(&ticketNumber) = args[0]
+			switch normalizeInput(args[1]) {
+			case "workingon", "sometimessoon", "waitingfor", "closed":
+				*(&newStatus) = args[1]
+			default:
+				*(&newNote) = args[1]
+			}
+		default:
 			*(&ticketNumber) = args[0]
 		}
+
+		newStatus = normalizeInput(newStatus)
 
 		// Get Paths
 		ticketsPath := getTicketsPath()          // ~/tickets/
@@ -57,7 +71,7 @@ var changeCmd = &cobra.Command{
 		case newStatus != "": //    if newStatus IS specified                  --> change to it
 			changeStatus(db, ticketNumber, newStatus)
 		case status == "closed": // if newStatus empty && status closed        --> workingON
-			changeStatus(db, ticketNumber, "workingOn")
+			changeStatus(db, ticketNumber, "workingon")
 		default: //                 if newStatus empty && status is NOT closed --> closed
 			changeStatus(db, ticketNumber, "closed")
 		}
@@ -70,5 +84,5 @@ var changeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(changeCmd)
-	changeCmd.Flags().StringP("note", "n", "", "info note")
+	// changeCmd.Flags().StringP("note", "n", "", "info note")
 }

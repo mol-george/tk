@@ -78,3 +78,6 @@ tk w _TICKET
 * have to implement search:
     - to list a ticket if I can't locate it
     - to display tickets between dates
+
+### rm
+* does not work
