@@ -78,6 +78,10 @@ tk w _TICKET
 * have to implement search:
     - to list a ticket if I can't locate it
     - to display tickets between dates
+* there is no way to just update the ticket only without switching the state
 
 ### rm
 * does not work
+
+### work
+* should automatically set a ticket to working on??
