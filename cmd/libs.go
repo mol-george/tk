@@ -169,7 +169,8 @@ func removeTicket(db *gorm.DB, toBeRemoved string) {
 }
 
 func workTicket(ticketPath string) {
-	cmd := exec.Command("subl", "-an", ticketPath)
+	// cmd := exec.Command("subl", "-an", ticketPath)
+	cmd := exec.Command("code", "--new-window", ticketPath)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
